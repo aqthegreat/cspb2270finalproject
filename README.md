@@ -1,8 +1,8 @@
-# cspb2270finalproject
+## cspb2270finalproject
 
-## CSPB 2270 – Fall 2023 – Final Project Proposal
-## Title: Tracking cats using Bluetooth trackers, aka “Cat Track Fever”
-## Aaron Quinto
+### CSPB 2270 – Fall 2023 – Final Project Proposal
+### Title: Tracking cats using Bluetooth trackers, aka “Cat Track Fever”
+### Aaron Quinto
 
 
 **Problem:**
