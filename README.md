@@ -55,7 +55,7 @@ Public member functions:
 - void AddBeaconSort(Beacon_structure &beacon_array)
     - This may or may not be required, so I’m adding it in the proposal in case it is.
     - This will sort the beacon_array by timestamp.
-    - Hopefully this won’t be needed and I can add the beacon as it’s added to the array, but there could be difficulties with that related to available space in the array.
+    - Hopefully this won’t be needed and I can sort the beacon as it’s added to the array, but there could be difficulties with that related to available space in the array.
 
 **Testing procedure:**
 
