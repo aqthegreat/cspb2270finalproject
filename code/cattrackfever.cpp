@@ -76,7 +76,7 @@ void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
     int n = beacon_vector.size() - 1; // set the last value of the vector
     int m = n; // start with the size of vector-1
 
-    while (beacon_vector.at(n).timestamp >= beacon_vector.at(m).timestamp) { // find the first timestamp from the end that is smaller
+    while (beacon_vector.back().timestamp >= beacon_vector.at(m).timestamp) { // find the first timestamp from the end that is smaller
         m = m - 1; // move backwards 1 value
     }
     
@@ -84,9 +84,12 @@ void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
         m = 0; // set to first value
     }
 
-    tempbeacon = beacon_vector.at(m);
-    beacon_vector.at(m) = beacon_vector.at(n);
-    beacon_vector.at(n) = tempbeacon;
+//cout << "sort: " << beacon_vector.back().timestamp << "," << beacon_vector.back().macName << "," << beacon_vector.back().rxid << "," << beacon_vector.back().rssi << "," << m << "," << n << endl;
+
+    tempbeacon = beacon_vector.back();
+    beacon_vector.insert(beacon_vector.begin() + m, tempbeacon);
+    beacon_vector.pop_back();
+
 
 }
 

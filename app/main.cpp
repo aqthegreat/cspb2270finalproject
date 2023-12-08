@@ -57,7 +57,7 @@ int main(){
             tempBeacon = beacons.BuildBeacon(row); // create a temp Beacon
 
             beacons.AddBeacon(beacon_vector, tempBeacon);
-            cout << beacon_vector.back().timestamp << endl;
+            //cout << beacon_vector.back().timestamp << "," << beacon_vector.back().macName << "," << beacon_vector.back().rxid << "," << beacon_vector.back().rssi << "," << beacon_vector.size() << endl;
             //cout << "size: " << beacon_vector.size() << endl;
 
         
