@@ -57,7 +57,7 @@ int main(){
             tempBeacon = beacons.BuildBeacon(row); // create a temp Beacon
 
             beacons.AddBeacon(beacon_vector, tempBeacon);
-            cout << tempBeacon.timestamp << endl;
+            cout << beacon_vector.back().timestamp << endl;
             //cout << "size: " << beacon_vector.size() << endl;
 
         

@@ -38,7 +38,7 @@ class Beacon {
     // RemoveBeacon removes a beacon from the vector and uses the maximum_length integer as the vector's maximum length
     // to decide if a beacon needs to be removed or not.
 
-    Position_struct GetCurrent(Beacon_struct beacon_vector);
+    Position_struct GetCurrent(vector<Beacon_struct> beacon_vector);
     // Get the current position of the cat, or at least the last known location
 
     //Position_struct[] GetPath(Beacon_struct beacon_vector);
@@ -48,7 +48,7 @@ class Beacon {
     bool CheckMaxLength(Beacon_struct beacon_vector, int maximum_length);
     // Check if the vector has reached a maximum set length
 
-    void BeaconSort(Beacon_struct &beacon_vector);
+    void BeaconSort(vector<Beacon_struct> &beacon_vector);
     // Sort the vector of beacons by timestamp
 
 };
