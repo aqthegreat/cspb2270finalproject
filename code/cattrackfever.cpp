@@ -84,15 +84,17 @@ Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current
 
     // Find a position relative to the middle of the house
     tempPos.relativePosition = tempPos.distanceFront + tempPos.distanceBack;
-    
+    // Find a estimated distance from the position
+    tempPos.relativeDistance = tempPos.distanceFront - tempPos.distanceBack;
+
+    /*
     // Set an estimated distance in feet
     if (tempPos.relativePosition > 0) { // If position is positive, cat is more in front
-        //tempPos.relativeDistance = tempPos.distanceFront * 3;
-        tempPos.relativeDistance = tempPos.relativePosition * 3;
+        tempPos.relativeDistance = tempPos.distanceFront - tempPos.distanceBack;
     } else { // If position is negative, cat is more in back
-        //tempPos.relativeDistance = tempPos.distanceBack * -3;
-        tempPos.relativeDistance = tempPos.relativePosition * -3;
+        tempPos.relativeDistance = -tempPos.relativePosition * 3;
     }
+    */
 
     return tempPos;
 }
