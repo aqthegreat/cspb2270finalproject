@@ -44,14 +44,55 @@ void Beacon::AddBeacon(vector<Beacon_struct> &beacon_vector, Beacon_struct recei
 
 }
 
-void Beacon::RemoveBeacon(vector<Beacon_struct> &beacon_vector, int maximum_length) {
-    // Removes a beacon if the vector gets too large
-
-}
-
-Position_struct Beacon::GetCurrent(vector<Beacon_struct> beacon_vector) {
+Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current_position, string RX1, string RX2) {
     Position_struct tempPos;
     // Outputs the current location of the cat, or last known location
+
+    // Set initial values
+    tempPos.distanceBack = 0;
+    tempPos.distanceFront = 0;
+
+    // Set the current timestamp
+    tempPos.timestamp = cat_vector.at(current_position).timestamp; // Set the current timestamp so we know what time we're looking at
+
+    // If this is first or last position
+    if (current_position == 0 || current_position == int(cat_vector.size()-1)) {
+        if (cat_vector.at(current_position).rxid == RX1) { // If the current position report is for the front receiver
+            tempPos.distanceFront = -cat_vector.at(current_position).rssi; // Set rssi, but negate it to a positive number for "front"
+        } else if (cat_vector.at(current_position).rxid == RX2) { // Otherwise it's probably the back receiver
+            tempPos.distanceBack = cat_vector.at(current_position).rssi; // Set rssi
+        }
+        return tempPos; // Skip the rest of this function
+    }
+
+    // Check if the previous position is within the last 15 seconds
+    if ((cat_vector.at(current_position).timestamp - cat_vector.at(current_position-1).timestamp) <= 15) {
+        if (cat_vector.at(current_position).rxid == RX1) {
+            tempPos.distanceFront = -cat_vector.at(current_position).rssi; // Set rssi, but negate it to a positive number for "front"
+            tempPos.distanceBack = cat_vector.at(current_position-1).rssi; // Set rssi
+        } else {
+            tempPos.distanceFront = -cat_vector.at(current_position-1).rssi; // Set rssi, but negate it to a positive number for "front"
+            tempPos.distanceBack = cat_vector.at(current_position).rssi; // Set rssi
+        }
+    } else { // Else if NOT within the last 15 seconds
+        if (cat_vector.at(current_position).rxid == RX1) {
+            tempPos.distanceFront = -cat_vector.at(current_position).rssi; // Set rssi, but negate it to a positive number for "front"
+        } else {
+            tempPos.distanceBack = cat_vector.at(current_position).rssi; // Set rssi
+        }
+    }
+
+    // Find a position relative to the middle of the house
+    tempPos.relativePosition = tempPos.distanceFront + tempPos.distanceBack;
+    
+    // Set an estimated distance in feet
+    if (tempPos.relativePosition > 0) { // If position is positive, cat is more in front
+        //tempPos.relativeDistance = tempPos.distanceFront * 3;
+        tempPos.relativeDistance = tempPos.relativePosition * 3;
+    } else { // If position is negative, cat is more in back
+        //tempPos.relativeDistance = tempPos.distanceBack * -3;
+        tempPos.relativeDistance = tempPos.relativePosition * -3;
+    }
 
     return tempPos;
 }
@@ -62,12 +103,6 @@ Position_struct[] Beacon::GetPath(Beacon_struct beacon_vector) {
 
 }
 */
-
-bool Beacon::CheckMaxLength(Beacon_struct beacon_vector, int maximum_length) {
-    // Checks if the vector has reached a maximum length
-
-    return false;
-}
 
 void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
     // Sorts the beacon vector
