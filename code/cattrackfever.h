@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -35,17 +36,16 @@ class Beacon {
     void AddBeacon(vector<Beacon_struct> &beacon_vector, Beacon_struct received_beacon);
     // AddBeacon adds the current beacon read in from the input file into the vector
 
-    Position_struct GetCurrent(vector<Beacon_struct> beacon_vector, int current_position, string RX1, string RX2);
-    // Get the current position of the cat, or at least the last known location
-
-    //Position_struct[] GetPath(Beacon_struct beacon_vector);
+    void GetPath(vector<Beacon_struct> beacon_vector, string macName, string fnameout, string RX1, string RX2);
     // Create an estimated path the cats walked
 
-    private:
 
+    private:
     void BeaconSort(vector<Beacon_struct> &beacon_vector);
     // Sort the vector of beacons by timestamp
 
+    Position_struct GetCurrent(vector<Beacon_struct> beacon_vector, int current_position, string RX1, string RX2);
+    // Get the current position of the cat, or at least the last known location
 };
 
 

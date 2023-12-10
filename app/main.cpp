@@ -23,7 +23,7 @@ int main(){
     vector<string> row; // Temp vector for reading in file
     vector<vector<string>> content; // Temp vector for decoding each row
     Beacon_struct tempBeacon; // Temp beacon structure for working
-    Position_struct tempPos; // Temp position structure for working
+    //Position_struct tempPos; // Temp position structure for working
     vector<Beacon_struct> beacon_vector; // Total vector for all beacon reports
     vector<Beacon_struct> pepper_vector; // Vector for Pepper's beacons
     vector<Beacon_struct> jack_vector; // Vector for Jack's beacons
@@ -37,23 +37,6 @@ int main(){
         return 1;
     }
 
-    // Open output file 1 for writing
-    fstream fileout1 (FNAME_PEPPER_PATH, ios::out);
-
-    if(!fileout1.is_open()) {
-        cout << "\nCould not open output file, so quitting.\n\n";
-        return 1;
-    }
-
-    // Open output file 2 for writing
-    fstream fileout2 (FNAME_JACK_PATH, ios::out);
-
-    if(!fileout2.is_open()) {
-        cout << "\nCould not open output file, so quitting.\n\n";
-        return 1;
-    }
-
-
     //Read in CSV file
     while(getline(filein, line)){
 
@@ -61,13 +44,6 @@ int main(){
 
         if (line.length() > 5) {
             stringstream str(line);
-    
-            // Following is the take each line from CSV file and push into a single vector
-            //while(getline(str, word, ',')) {
-            //    row.push_back(word);
-            //}
-            //content.push_back(row);
-
 
             // Now instead of above, we're taking each part of the line and putting into a structure
             while(getline(str,word, ',')) {
@@ -77,8 +53,6 @@ int main(){
             tempBeacon = beacons.BuildBeacon(row); // create a temp Beacon
 
             beacons.AddBeacon(beacon_vector, tempBeacon);
-            //cout << beacon_vector.back().timestamp << "," << beacon_vector.back().macName << "," << beacon_vector.back().rxid << "," << beacon_vector.back().rssi << "," << beacon_vector.size() << endl;
-            //cout << "size: " << beacon_vector.size() << endl;
         }
     }
 
@@ -91,18 +65,9 @@ int main(){
         }
     }
 
-    // Scan each vector for the current position
-    for (int i = 0; i < int(pepper_vector.size()); i++) {
-        tempPos = beacons.GetCurrent(pepper_vector, i, RX1, RX2);
-        cout << "Pepper,Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
-        fileout1 << "Pepper,Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
-    }
-
-    for (int i = 0; i < int(jack_vector.size()); i++) {
-        tempPos = beacons.GetCurrent(jack_vector, i, RX1, RX2);
-        cout << "Jack,Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
-        fileout2 << "Jack,Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
-    }
+    // Write the path the cat walked to a file
+    beacons.GetPath(pepper_vector, PEPPER, FNAME_PEPPER_PATH, RX1, RX2);
+    beacons.GetPath(jack_vector, JACK, FNAME_JACK_PATH, RX1, RX2);
 
     return 0; // Finish successfully
 }

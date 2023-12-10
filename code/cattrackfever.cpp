@@ -2,7 +2,8 @@
 #include <vector>
 #include <stdlib.h>
 #include <string>
-#include <iostream> //added for troubleshooting
+#include <fstream>
+#include <iostream>
 
 Beacon::Beacon() {
     //Constructor if needed
@@ -12,8 +13,8 @@ Beacon::~Beacon() {
     //Deconstructor if needed
 };
 
-
 Beacon_struct Beacon::BuildBeacon(vector<string> row) {
+    // Create new beacon record for each line from an input file
 
     Beacon_struct new_beacon; // Create new beacon record
     string temptime; // Create temporary variable for converting string to int
@@ -45,8 +46,10 @@ void Beacon::AddBeacon(vector<Beacon_struct> &beacon_vector, Beacon_struct recei
 }
 
 Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current_position, string RX1, string RX2) {
-    Position_struct tempPos;
     // Outputs the current location of the cat, or last known location
+    
+    // Setup temp structure for working
+    Position_struct tempPos;
 
     // Set initial values
     tempPos.distanceBack = 0;
@@ -87,24 +90,29 @@ Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current
     // Find a estimated distance from the position
     tempPos.relativeDistance = tempPos.distanceFront - tempPos.distanceBack;
 
-    /*
-    // Set an estimated distance in feet
-    if (tempPos.relativePosition > 0) { // If position is positive, cat is more in front
-        tempPos.relativeDistance = tempPos.distanceFront - tempPos.distanceBack;
-    } else { // If position is negative, cat is more in back
-        tempPos.relativeDistance = -tempPos.relativePosition * 3;
-    }
-    */
-
     return tempPos;
 }
 
-/* Stretch Goal of creating a path
-Position_struct[] Beacon::GetPath(Beacon_struct beacon_vector) {
+void Beacon::GetPath(vector<Beacon_struct> beacon_vector, string macName, string fnameout, string RX1, string RX2) {
     // Creates a path from all of the beacon reports to show how the cat walked
+    Position_struct tempPos;
 
+    // Open output file 1 for writing
+    fstream fileout (fnameout, ios::out);
+
+    if(!fileout.is_open()) {
+        cout << "\nCould not open output file, so quitting.\n\n";
+        return;
+    }
+
+    fileout << "MacName,Timestamp,Position,Distance" << endl;
+
+    for (int i = 0; i < int(beacon_vector.size()); i++) {
+        tempPos = this->GetCurrent(beacon_vector, i, RX1, RX2);
+        cout << "Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
+        fileout << macName << "," << tempPos.timestamp << "," << tempPos.relativePosition << "," << tempPos.relativeDistance << endl;
+    }
 }
-*/
 
 void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
     // Sorts the beacon vector
@@ -121,8 +129,7 @@ void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
         m = 0; // set to first value
     }
 
-//cout << "sort: " << beacon_vector.back().timestamp << "," << beacon_vector.back().macName << "," << beacon_vector.back().rxid << "," << beacon_vector.back().rssi << "," << m << "," << n << endl;
-
+    // Swap values for sorting
     tempbeacon = beacon_vector.back();
     beacon_vector.insert(beacon_vector.begin() + m, tempbeacon);
     beacon_vector.pop_back();
