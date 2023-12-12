@@ -19,15 +19,16 @@ By coordinating the beacon’s timestamp and signal strength between both receiv
     1. Back = -80
     1. Center point is +20 from the center of the house.
     1. The estimated range is 60 + 80 = 140 feet around that point.
-    1. This tells us the cat is in front of the house, but could be across the street, or up to houses to each side.
+    1. This tells us the cat is in front of the house, but could be across the street, or up to two houses to either side.
 1. One receiver:
     1. Front = 0 (no signal in the last 15 seconds)
     1. Back = -70
     1. Center point is -20 from the center of the house.
     1. The estimated range is 0 + 70 = 70 feet around that point.
-   1. This tells us the cat is in back of the house and directly behind as the front did not receive a signal.
+    1. This tells us the cat is in back of the house and directly behind as the front did not receive a signal.
 
 (Change from proposal which suggested using arrays of fixed lengths.)
+
 Using a vector, we can load all of the signal reports in a CSV file to a dynamically-sized vector and search that vector as needed. Originally in the proposal, I was attempting to manage memory usage more, but that's not necessary. The servers and computers running this program have plenty of memory. The vector will be split into 2 separate new vectors, one per cat, to then create a position and path.
 
 
