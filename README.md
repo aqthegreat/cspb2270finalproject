@@ -29,14 +29,14 @@ By coordinating the beacon’s timestamp and signal strength between both receiv
 
 (Change from proposal which suggested using arrays of fixed lengths.)
 
-Using a vector, we can load all of the signal reports in a CSV file to a dynamically-sized vector and search that vector as needed. Originally in the proposal, I was attempting to manage memory usage more, but that's not necessary. The servers and computers running this program have plenty of memory. The vector will be split into 2 separate new vectors, one per cat, to then create a position and path.
+Using a vector, we can load all of the signal reports in a CSV file to a dynamically-sized vector and search that vector as needed. Originally in the proposal, I was attempting to manage memory consumption, but that's not necessary. The computers and servers running this program have plenty of memory. The vector will be split into 2 separate new vectors, one per cat, to then create a position and path.
 
 
 **Data structures:**
 
 Beacon_structure:
 - macName (MAC address as string) Per tracker ID is the MAC address of the tracker
-- timestamp (integer in nanoseconds)
+- timestamp (integer in seconds)
 - rxid (string) Receiver ID
 - rssi (integer in dBm) Received Signal Strength
 
@@ -69,13 +69,13 @@ Public member functions:
 - void AddBeacon(vector-Beacon_structure &beacon_vector, Beacon_structure received_beacon)
     - Adds the most recent beacon to the array or list
     - Needs to insert in time order, which may not happen sequentially, so a search process needs to happen to insert it in the correct order. This calls BeaconSort to handle the sorting.
+    - ~~Asks CheckLength() if the new beacon can be added.~~
+    - ~~May need to call a “sort” function to make sure the beacon is added in order of the timestamp.~~
+    - The timestamp in the CSV file is in milliseconds, but that's too large for an "integer" type value, so the last 3 digits need to be removed before adding the timestamp to the beacon.
     
-    ~~- Asks CheckLength() if the new beacon can be added.~~
-    ~~- May need to call a “sort” function to make sure the beacon is added in order of the timestamp.~~
-    
-~~- void RemoveBeacon(Beacon_structure beacon_array, int maximum_length)
-    - Removes the oldest beacons to keep the array from being infinitely long
-    - Uses a maximum_length value to remove as many values as necessary.~~
+- ~~void RemoveBeacon(Beacon_structure beacon_array, int maximum_length)~~
+    - ~~Removes the oldest beacons to keep the array from being infinitely long~~
+    - ~~Uses a maximum_length value to remove as many values as necessary.~~
     
 - ~~Position_structure[]~~ void GetPath(vector-Beacon_structure beacon_vector, string macName, string fnameout, string RX1, string RX2)
     - Generates a path for the requested tracker
@@ -87,8 +87,8 @@ Public member functions:
 
 **Private member functions:**
 
-~~- bool CheckLength(Beacon_structure beacon_array)
-    - Checks to make sure there room to add a new beacon report in the array~~
+- ~~bool CheckLength(Beacon_structure beacon_array)~~
+    - ~~Checks to make sure there room to add a new beacon report in the array~~
 - void BeaconSort(vector-Beacon_structure &beacon_array)
     - This may or may not be required, so I’m adding it in the proposal in case it is.
     - This will sort the beacon_array by timestamp.
@@ -114,4 +114,4 @@ After the entire CSV file has been read into the vector, the main.cpp program ru
 
 **Alternatives:**
 
-I chose to use a ~~simply array~~ vector for this project instead of something more complex such as a linked list because the structure is in order by time. We’re not likely to search for a particular point in time to find the position at a specific time. Therefore, instead of adding complexity and writing time to the program, we’ll use a simpler design that is ideal for creating a specific order of points. The points still need to be sorted by time, but they do not need to be quickly searched.
+I chose to use a ~~simple array~~ vector for this project instead of something more complex such as a linked list because the structure is in order by time. We’re not likely to search for a particular point in time to find the position at a specific time. Therefore, instead of adding complexity and writing time to the program, we’ll use a simpler design that is ideal for creating a specific order of points. The points still need to be sorted by time, but they do not need to be quickly searched.
