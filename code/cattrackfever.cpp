@@ -45,6 +45,50 @@ void Beacon::AddBeacon(vector<Beacon_struct> &beacon_vector, Beacon_struct recei
 
 }
 
+void Beacon::GetPath(vector<Beacon_struct> beacon_vector, string macName, string fnameout, string RX1, string RX2) {
+    // Creates a path from all of the beacon reports to show how the cat walked
+    Position_struct tempPos;
+
+    // Open output file 1 for writing
+    fstream fileout (fnameout, ios::out);
+
+    if(!fileout.is_open()) {
+        cout << "\nCould not open output file, so quitting.\n\n";
+        return;
+    }
+
+    fileout << "MacName,Timestamp,Position,Distance" << endl;
+
+    for (int i = 0; i < int(beacon_vector.size()); i++) {
+        tempPos = this->GetCurrent(beacon_vector, i, RX1, RX2);
+        cout << "Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
+        fileout << macName << "," << tempPos.timestamp << "," << tempPos.relativePosition << "," << tempPos.relativeDistance << endl;
+    }
+}
+
+void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
+    // Sorts the beacon vector
+
+    Beacon_struct tempbeacon; // create a temp beacon variable for swapping
+    int n = beacon_vector.size() - 1; // set the last value of the vector
+    int m = n; // start with the size of vector-1
+
+    while (beacon_vector.back().timestamp >= beacon_vector.at(m).timestamp) { // find the first timestamp from the end that is smaller
+        m = m - 1; // move backwards 1 value
+    }
+    
+    if (m < 0) { // check for first sort
+        m = 0; // set to first value
+    }
+
+    // Swap values for sorting
+    tempbeacon = beacon_vector.back();
+    beacon_vector.insert(beacon_vector.begin() + m, tempbeacon);
+    beacon_vector.pop_back();
+
+
+}
+
 Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current_position, string RX1, string RX2) {
     // Outputs the current location of the cat, or last known location
     
@@ -92,48 +136,3 @@ Position_struct Beacon::GetCurrent(vector<Beacon_struct> cat_vector, int current
 
     return tempPos;
 }
-
-void Beacon::GetPath(vector<Beacon_struct> beacon_vector, string macName, string fnameout, string RX1, string RX2) {
-    // Creates a path from all of the beacon reports to show how the cat walked
-    Position_struct tempPos;
-
-    // Open output file 1 for writing
-    fstream fileout (fnameout, ios::out);
-
-    if(!fileout.is_open()) {
-        cout << "\nCould not open output file, so quitting.\n\n";
-        return;
-    }
-
-    fileout << "MacName,Timestamp,Position,Distance" << endl;
-
-    for (int i = 0; i < int(beacon_vector.size()); i++) {
-        tempPos = this->GetCurrent(beacon_vector, i, RX1, RX2);
-        cout << "Timestamp: " << tempPos.timestamp << ",Position: " << tempPos.relativePosition << ",Distance: " << tempPos.relativeDistance << endl;
-        fileout << macName << "," << tempPos.timestamp << "," << tempPos.relativePosition << "," << tempPos.relativeDistance << endl;
-    }
-}
-
-void Beacon::BeaconSort(vector<Beacon_struct> &beacon_vector){
-    // Sorts the beacon vector
-
-    Beacon_struct tempbeacon; // create a temp beacon variable for swapping
-    int n = beacon_vector.size() - 1; // set the last value of the vector
-    int m = n; // start with the size of vector-1
-
-    while (beacon_vector.back().timestamp >= beacon_vector.at(m).timestamp) { // find the first timestamp from the end that is smaller
-        m = m - 1; // move backwards 1 value
-    }
-    
-    if (m < 0) { // check for first sort
-        m = 0; // set to first value
-    }
-
-    // Swap values for sorting
-    tempbeacon = beacon_vector.back();
-    beacon_vector.insert(beacon_vector.begin() + m, tempbeacon);
-    beacon_vector.pop_back();
-
-
-}
-
