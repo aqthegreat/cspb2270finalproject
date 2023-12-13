@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include "../code/cattrackfever.cpp"
+#include "../code/cattrackfever.h"
 
 using namespace std;
 
